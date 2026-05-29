@@ -12,7 +12,7 @@ const processVerification = async (req, res) => {
         const selfieFile = req.files['selfieImage'][0];
 
         //  Delegate OCR processing to the service
-        const { rawText, dob } = await extractAadhaarData(aadhaarFile.buffer);
+        const { rawText, dob, name } = await extractAadhaarData(aadhaarFile.buffer);
         
         //  Delegate math to the utility
         const age = calculateAge(dob);
@@ -27,8 +27,14 @@ const processVerification = async (req, res) => {
         //  Send Response
         return res.status(200).json({
             success: true,
+            admission: {
+                isAllowed: admissionStatus.eligible,   // true if 18+, false if underage or failed OCR
+                status: admissionStatus.status,       // "ALLOWED", "DENIED", or "REQUIRES_MANUAL_OVERRIDE"
+                reason: admissionStatus.status === "DENIED" ? "Underage" : (admissionStatus.status === "ALLOWED" ? "Verified 18+" : "OCR could not determine DOB")
+            },
             extractedData: {
                 rawTextFound: rawText.substring(0, 50) + "...", 
+                name: name || "Not Found",
                 dob: dob,
                 calculatedAge: age
             },
