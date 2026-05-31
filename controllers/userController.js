@@ -3,7 +3,7 @@ import UserSubmission from "../models/UserSubmission.js";
 // API 1: Verify User (The Drop-off)
 // Route: POST /api/user/submit
 
-export const submitUserDetails = async (req, res) => {
+export const verifyUser = async (req, res) => {
   try {
     // We now pull the flattened ID fields directly from the body
     const { deviceId, name, dob, idType, idNumber, idDocumentUrl, selfieUrl } =
@@ -57,7 +57,7 @@ export const submitUserDetails = async (req, res) => {
 // API 2: Check Approval Status (The Look-up)
 // Route: GET /api/user/status/:deviceId
 
-export const checkApprovalStatus = async (req, res) => {
+export const isApproved = async (req, res) => {
   try {
     // The mobile app sends the deviceId in the URL
     const { deviceId } = req.params;
