@@ -65,7 +65,7 @@ userSubmissionSchema.virtual("age").get(function () {
 });
 
 // Pre-Save Hook (Formatting & Ticket Gen)
-userSubmissionSchema.pre("save", function (next) {
+userSubmissionSchema.pre("save", function () {
   // Always uppercase the name for a clean database
   if (this.isModified("name")) {
     this.name = this.name.toUpperCase();
@@ -79,7 +79,6 @@ userSubmissionSchema.pre("save", function (next) {
     this.ticketNumber = `TKT-${this.idType.substring(0, 3)}-${randomHex}`;
   }
 
-  next();
 });
 
 export default mongoose.model("UserSubmission", userSubmissionSchema);
