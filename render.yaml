@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: club-verification-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js # Change to your entry file (e.g., index.js) if different
+    envVars:
+      - key: NODE_ENV
+        value: production
