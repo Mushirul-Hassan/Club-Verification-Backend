@@ -75,7 +75,7 @@ userSubmissionSchema.pre("save", function () {
   if (this.status === "APPROVED" && !this.ticketNumber) {
     const randomHex = crypto.randomBytes(3).toString("hex").toUpperCase();
 
-    // Pulls directly from the flat idType field now!
+    // Pulls directly from the flat idType field now
     this.ticketNumber = `TKT-${this.idType.substring(0, 3)}-${randomHex}`;
   }
 
