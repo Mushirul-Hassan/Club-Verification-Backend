@@ -1,4 +1,5 @@
 import UserSubmission from "../models/UserSubmission.js";
+import uploadFileToCloudinary from "../config/uploadFile.js";
 
 // API 1: Verify User (The Drop-off)
 // Route: POST /api/user/submit
@@ -6,18 +7,24 @@ import UserSubmission from "../models/UserSubmission.js";
 export const verifyUser = async (req, res) => {
   try {
     // We now pull the flattened ID fields directly from the body
-    const { deviceId, name, dob, idType, idNumber, idDocumentUrl, selfieUrl } =
+    const { deviceId, name, dob, idType, idNumber } =
       req.body;
 
     // Validations
+
+    if (!req.files || !req.files["idDocument"] || !req.files["selfie"]) {
+      return res.status(400).json({
+        success: false,
+        message: "Both ID Document and Selfie files are required.",
+      });
+    }
+
     if (
       !deviceId ||
       !name ||
       !dob ||
       !idType ||
-      !idNumber ||
-      !idDocumentUrl ||
-      !selfieUrl
+      !idNumber 
     ) {
       return res.status(400).json({
         success: false,
@@ -25,6 +32,11 @@ export const verifyUser = async (req, res) => {
       });
     }
 
+    const [idDocumentUrl, selfieUrl] = await Promise.all([
+      uploadFileToCloudinary(req.files["idDocument"][0], "club_app_ids"),
+      uploadFileToCloudinary(req.files["selfie"][0], "club_app_selfies"),
+    ]);
+    
     // Create the new entry (submissionId generates automatically)
     const newUser = new UserSubmission({
       deviceId,
