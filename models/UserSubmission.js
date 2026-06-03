@@ -26,7 +26,6 @@ const userSubmissionSchema = new mongoose.Schema(
     },
     idNumber: {
       type: String,
-      required: true,
     },
     idDocumentUrl: {
       type: String,

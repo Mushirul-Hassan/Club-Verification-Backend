@@ -25,7 +25,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET)); 
 
-// 3. Rate Limiter: Max 10 requests per minute per IP
+//  Rate Limiter: Max 10 requests per minute per IP
 const apiLimiter = rateLimit({
     windowMs: 1 * 60 * 1000,
     max: 10,

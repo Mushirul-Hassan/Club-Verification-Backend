@@ -23,8 +23,7 @@ export const verifyUser = async (req, res) => {
       !deviceId ||
       !name ||
       !dob ||
-      !idType ||
-      !idNumber 
+      !idType
     ) {
       return res.status(400).json({
         success: false,
