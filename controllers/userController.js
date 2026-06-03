@@ -90,6 +90,9 @@ export const isApproved = async (req, res) => {
         userName: user.name,
         deviceId: user.deviceId,
         submissionId: user.submissionId,
+        selfieUrl: user.selfieUrl,
+        idDocumentUrl: user.idDocumentUrl,
+        
 
         tokenId: user.tokenId, // For the QR Code
         ticketNumber: user.ticketNumber,
@@ -102,6 +105,8 @@ export const isApproved = async (req, res) => {
       success: true,
       isVerified: false,
       status: user.status,
+      selfieUrl: user.selfieUrl,
+      idDocumentUrl: user.idDocumentUrl,
 
       userName: user.name,
       deviceId: user.deviceId,
