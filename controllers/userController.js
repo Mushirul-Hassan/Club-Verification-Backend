@@ -7,8 +7,7 @@ import uploadFileToCloudinary from "../config/uploadFile.js";
 export const verifyUser = async (req, res) => {
   try {
     // We now pull the flattened ID fields directly from the body
-    const { deviceId, name, dob, idType, idNumber } =
-      req.body;
+    const { deviceId, name, dob, idType, idNumber } = req.body;
 
     // Validations
 
@@ -19,12 +18,7 @@ export const verifyUser = async (req, res) => {
       });
     }
 
-    if (
-      !deviceId ||
-      !name ||
-      !dob ||
-      !idType
-    ) {
+    if (!deviceId || !name || !dob || !idType) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields. Please fill out the entire form.",
@@ -35,7 +29,7 @@ export const verifyUser = async (req, res) => {
       uploadFileToCloudinary(req.files["idDocument"][0], "club_app_ids"),
       uploadFileToCloudinary(req.files["selfie"][0], "club_app_selfies"),
     ]);
-    
+
     // Create the new entry (submissionId generates automatically)
     const newUser = new UserSubmission({
       deviceId,
@@ -91,9 +85,15 @@ export const isApproved = async (req, res) => {
       return res.status(200).json({
         success: true,
         isVerified: true,
+        status: user.status,
+
+        userName: user.name,
+        deviceId: user.deviceId,
+        submissionId: user.submissionId,
+
         tokenId: user.tokenId, // For the QR Code
-        ticketNumber: user.ticketNumber, // Human readable (e.g., TKT-PAN-8F9B2A)
-        age: user.age, // Automatically calculated by the Virtual!
+        ticketNumber: user.ticketNumber,
+        age: user.age,
       });
     }
 
@@ -102,6 +102,10 @@ export const isApproved = async (req, res) => {
       success: true,
       isVerified: false,
       status: user.status,
+
+      userName: user.name,
+      deviceId: user.deviceId,
+      submissionId: user.submissionId,
     });
   } catch (error) {
     return res.status(500).json({
