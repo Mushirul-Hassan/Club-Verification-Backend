@@ -1,18 +1,21 @@
 import express from "express";
-import { verifyUser, isApproved } from "../controllers/userController.js";
+import {
+  submitUserDetails,
+  checkApprovalStatus,
+} from "../controllers/userController.js";
 import upload from "../config/multer.js";
 
 const router = express.Router();
 
 router.post(
-  "/verify",
+  "/submit",
   upload.fields([
     { name: "idDocument", maxCount: 1 },
     { name: "selfie", maxCount: 1 },
   ]),
-  verifyUser,
+  submitUserDetails,
 );
 
-router.get("/is-approved/:deviceId", isApproved);
+router.get("/status/:deviceId", checkApprovalStatus);
 
 export default router;

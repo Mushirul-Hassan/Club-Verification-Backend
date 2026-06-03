@@ -4,7 +4,7 @@ import uploadFileToCloudinary from "../config/uploadFile.js";
 // API 1: Verify User (The Drop-off)
 // Route: POST /api/user/submit
 
-export const verifyUser = async (req, res) => {
+export const submitUserDetails = async (req, res) => {
   try {
     // We now pull the flattened ID fields directly from the body
     const { deviceId, name, dob, idType, idNumber } = req.body;
@@ -62,7 +62,7 @@ export const verifyUser = async (req, res) => {
 // API 2: Check Approval Status (The Look-up)
 // Route: GET /api/user/status/:deviceId
 
-export const isApproved = async (req, res) => {
+export const checkApprovalStatus = async (req, res) => {
   try {
     // The mobile app sends the deviceId in the URL
     const { deviceId } = req.params;
@@ -92,7 +92,6 @@ export const isApproved = async (req, res) => {
         submissionId: user.submissionId,
         selfieUrl: user.selfieUrl,
         // idDocumentUrl: user.idDocumentUrl,
-        
 
         tokenId: user.tokenId, // For the QR Code
         ticketNumber: user.ticketNumber,
