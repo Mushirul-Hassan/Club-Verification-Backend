@@ -5,6 +5,9 @@ import uploadFileToCloudinary from "../config/uploadFile.js";
 // Route: POST /api/user/submit
 
 export const submitUserDetails = async (req, res) => {
+   console.log("BODY:", req.body);
+  console.log("FILES:", req.files);
+  
   try {
     // We now pull the flattened ID fields directly from the body
     const { deviceId, name, dob, idType, idNumber } = req.body;
