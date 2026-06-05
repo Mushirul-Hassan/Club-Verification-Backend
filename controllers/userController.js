@@ -1,19 +1,17 @@
 import UserSubmission from "../models/UserSubmission.js";
 import uploadFileToCloudinary from "../config/uploadFile.js";
 
-// API 1: Verify User (The Drop-off)
-// Route: POST /api/user/submit
 
 export const submitUserDetails = async (req, res) => {
   console.log("BODY:", req.body);
   console.log("FILES:", req.files);
 
   try {
-    // We now pull the flattened ID fields directly from the body
+   
     const { deviceId, name, dob, idType, idNumber } = req.body;
     
 
-    // Validations
+  
 
     if (!req.files || !req.files["idDocument"] || !req.files["selfie"]) {
       return res.status(400).json({
@@ -34,7 +32,7 @@ export const submitUserDetails = async (req, res) => {
       uploadFileToCloudinary(req.files["selfie"][0], "club_app_selfies"),
     ]);
 
-    // Create the new entry (submissionId generates automatically)
+  
     const newUser = new UserSubmission({
       deviceId,
       name,
@@ -45,14 +43,14 @@ export const submitUserDetails = async (req, res) => {
       selfieUrl,
     });
 
-    //  Save to MongoDB
+    
     await newUser.save();
 
     //  Respond to the mobile app
     return res.status(201).json({
       success: true,
       message: "Submission received. Please wait for admin approval.",
-      submissionId: newUser.submissionId, // Sent back just in case they need it
+      submissionId: newUser.submissionId, 
     });
   } catch (error) {
     return res.status(500).json({
@@ -63,20 +61,18 @@ export const submitUserDetails = async (req, res) => {
   }
 };
 
-// API 2: Check Approval Status (The Look-up)
-// Route: GET /api/user/status/:deviceId
 
 export const checkApprovalStatus = async (req, res) => {
   try {
-    // The mobile app sends the deviceId in the URL
+    
     const { deviceId } = req.params;
 
-    //  Find the most recent submission from this specific phone
+  
     const user = await UserSubmission.findOne({ deviceId: deviceId }).sort({
       createdAt: -1,
     });
 
-    //  If we can't find them, they need to submit the form first
+    
     if (!user) {
       return res.status(404).json({
         success: false,
