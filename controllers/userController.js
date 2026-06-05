@@ -1,17 +1,12 @@
 import UserSubmission from "../models/UserSubmission.js";
 import uploadFileToCloudinary from "../config/uploadFile.js";
 
-
 export const submitUserDetails = async (req, res) => {
   console.log("BODY:", req.body);
   console.log("FILES:", req.files);
 
   try {
-   
     const { deviceId, name, dob, idType, idNumber } = req.body;
-    
-
-  
 
     if (!req.files || !req.files["idDocument"] || !req.files["selfie"]) {
       return res.status(400).json({
@@ -32,7 +27,6 @@ export const submitUserDetails = async (req, res) => {
       uploadFileToCloudinary(req.files["selfie"][0], "club_app_selfies"),
     ]);
 
-  
     const newUser = new UserSubmission({
       deviceId,
       name,
@@ -43,14 +37,12 @@ export const submitUserDetails = async (req, res) => {
       selfieUrl,
     });
 
-    
     await newUser.save();
 
-    //  Respond to the mobile app
     return res.status(201).json({
       success: true,
       message: "Submission received. Please wait for admin approval.",
-      submissionId: newUser.submissionId, 
+      submissionId: newUser.submissionId,
     });
   } catch (error) {
     return res.status(500).json({
@@ -61,18 +53,14 @@ export const submitUserDetails = async (req, res) => {
   }
 };
 
-
 export const checkApprovalStatus = async (req, res) => {
   try {
-    
     const { deviceId } = req.params;
 
-  
     const user = await UserSubmission.findOne({ deviceId: deviceId }).sort({
       createdAt: -1,
     });
 
-    
     if (!user) {
       return res.status(404).json({
         success: false,
