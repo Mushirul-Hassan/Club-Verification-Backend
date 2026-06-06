@@ -20,7 +20,7 @@ const AdminSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['ADMIN', 'BOUNCER'],
+        enum: ['ADMIN', 'CLUB'],
         default: 'ADMIN'
     },
     isActive: {
@@ -31,7 +31,7 @@ const AdminSchema = new mongoose.Schema({
 }, {timestamps: true });
 
 AdminSchema.pre('save', async function (next) {
-    if(!this.Modified('password')) return next();
+    if(!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
     next();
 });
