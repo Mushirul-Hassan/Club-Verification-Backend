@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const AdminSchema = new mongoose.AdminSchema({
+const AdminSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, 'Username is required'],
