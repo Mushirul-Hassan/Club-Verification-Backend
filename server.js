@@ -7,7 +7,7 @@ import 'dotenv/config';
 
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
-// import adminRoutes from './routes/adminRoutes.js';
+import adminAuthRoutes from './routes/adminAuthRoutes.js';
 // import doorRoutes from './routes/doorRoutes.js'; 
 
 const app = express();
@@ -34,7 +34,7 @@ const apiLimiter = rateLimit({
 
 
 app.use('/api/user', apiLimiter, userRoutes);
-// app.use('/api/admin', apiLimiter, adminRoutes);
+app.use('/api/admin/auth', adminAuthRoutes);
 // app.use('/api/door', apiLimiter, doorRoutes);
 
 app.listen(PORT, () => {
