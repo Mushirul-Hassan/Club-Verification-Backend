@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import Admin from '../models/Admin.js';
-import tokenService from '../services/tokenService.js';
+import tokenService from '../services/tokenServices.js';
 
 export const loginAdmin = async (req, res) => {
   try {

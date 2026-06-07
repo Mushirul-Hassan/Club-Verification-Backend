@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const AdminSchema = new mongoose.Schema({
     username: {
@@ -20,7 +20,7 @@ const AdminSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['ADMIN', 'CLUB'],
+        enum: ['SUPERADMIN', 'ADMIN', 'CLUB'],
         default: 'ADMIN'
     },
     isActive: {
@@ -30,10 +30,10 @@ const AdminSchema = new mongoose.Schema({
 
 }, {timestamps: true });
 
-AdminSchema.pre('save', async function (next) {
+AdminSchema.pre('save', async function ()  {
     if(!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
-    next();
+    
 });
 
 export default mongoose.model('Admin', AdminSchema);

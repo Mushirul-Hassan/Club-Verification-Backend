@@ -19,7 +19,7 @@ connectDB();
 
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000',  'https://club-verification-backend.onrender.com',], 
+    origin: ['http://localhost:5173', 'http://localhost:3000'], 
     credentials: true 
 }));
 app.use(express.json());
@@ -28,7 +28,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 //  Rate Limiter: Max 10 requests per minute per IP
 const apiLimiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 10,
+    max: 60,
     message: { error: "Too many requests, please try again in a minute." }
 });
 
