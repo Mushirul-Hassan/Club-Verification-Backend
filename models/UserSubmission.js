@@ -14,6 +14,12 @@ const userSubmissionSchema = new mongoose.Schema(
       required: true,
     },
 
+    clubId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Club",
+      default: null, // null for MVP, required when multi-tenancy is enabled
+    },
+
     ticketNumber: { type: String },
 
     name: { type: String, required: true },
@@ -40,8 +46,27 @@ const userSubmissionSchema = new mongoose.Schema(
       default: "PENDING",
     },
 
-    tokenId: { type: String, default: null },
+    tokenId: { type: String, default: null, unique: true, sparse: true },// allows multiple nulls in MongoDB
+
+     approvedAt: { type: Date, default: null },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      default: null,
+    },
+
+     rejectedAt: { type: Date, default: null },
+    rejectedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      default: null,
+    },
+    rejectionReason: { type: String, default: null },
   },
+
+  
+
+  
   {
     timestamps: true,
     toJSON: { virtuals: true },
@@ -77,7 +102,6 @@ userSubmissionSchema.pre("save", function () {
     // Pulls directly from the flat idType field now
     this.ticketNumber = `TKT-${this.idType.substring(0, 3)}-${randomHex}`;
   }
-
 });
 
 export default mongoose.model("UserSubmission", userSubmissionSchema);

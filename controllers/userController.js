@@ -1,5 +1,6 @@
 import UserSubmission from "../models/UserSubmission.js";
 import uploadFileToCloudinary from "../config/uploadFile.js";
+import { parseFlexibleDate } from '../utils/parseDate.js';
 
 export const submitUserDetails = async (req, res) => {
   console.log("BODY:", req.body);

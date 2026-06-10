@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
-import { tokenConfig } from '../config/token.config.js';
+import jwt from "jsonwebtoken";
+import { tokenConfig } from "../config/token.config.js";
 
 class TokenService {
   /**
@@ -9,7 +9,7 @@ class TokenService {
     return jwt.sign(
       { adminId: admin._id, role: admin.role, fullName: admin.fullName },
       tokenConfig.access.secret,
-      { expiresIn: tokenConfig.access.expiresIn }
+      { expiresIn: tokenConfig.access.expiresIn },
     );
   }
 
@@ -20,12 +20,12 @@ class TokenService {
     const refreshToken = jwt.sign(
       { adminId: admin._id, role: admin.role },
       tokenConfig.refresh.secret,
-      { expiresIn: tokenConfig.refresh.expiresIn }
+      { expiresIn: tokenConfig.refresh.expiresIn },
     );
 
-    res.cookie('jwt_refresh', refreshToken, {
+    res.cookie("jwt_refresh", refreshToken, {
       ...tokenConfig.cookieOptions,
-      maxAge: tokenConfig.refresh.cookieMaxAge
+      maxAge: tokenConfig.refresh.cookieMaxAge,
     });
   }
 
@@ -33,7 +33,7 @@ class TokenService {
    * Safely clears the refresh cookie out of the client browser
    */
   clearRefreshCookie(res) {
-    res.clearCookie('jwt_refresh', tokenConfig.cookieOptions);
+    res.clearCookie("jwt_refresh", tokenConfig.cookieOptions);
   }
 
   /**

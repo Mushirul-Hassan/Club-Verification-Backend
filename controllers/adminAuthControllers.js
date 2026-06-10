@@ -1,17 +1,30 @@
-import bcrypt from 'bcryptjs';
-import Admin from '../models/Admin.js';
-import tokenService from '../services/tokenServices.js';
+import bcrypt from "bcryptjs";
+import Admin from "../models/Admin.js";
+import tokenService from "../services/tokenServices.js";
 
 export const loginAdmin = async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ success: false, message: 'Please provide username and password' });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Please provide username and password",
+        });
     }
 
-    const admin = await Admin.findOne({ username: username.toLowerCase().trim() }).select('+password');
-    if (!admin || !admin.isActive || !(await bcrypt.compare(password, admin.password))) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    const admin = await Admin.findOne({
+      username: username.toLowerCase().trim(),
+    }).select("+password");
+    if (
+      !admin ||
+      !admin.isActive ||
+      !(await bcrypt.compare(password, admin.password))
+    ) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     // Use our new decoupled token engine 🚀
@@ -20,33 +33,45 @@ export const loginAdmin = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Login successful',
+      message: "Login successful",
       accessToken,
-      admin: { fullName: admin.fullName, role: admin.role }
+      admin: { fullName: admin.fullName, role: admin.role },
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Login error', error: error.message });
+    return res
+      .status(500)
+      .json({ success: false, message: "Login error", error: error.message });
   }
 };
 
 export const refreshAdminSession = async (req, res) => {
   try {
     const cookieToken = req.signedCookies.jwt_refresh;
-    if (!cookieToken) return res.status(401).json({ success: false, message: 'Session expired' });
+    if (!cookieToken)
+      return res
+        .status(401)
+        .json({ success: false, message: "Session expired" });
 
     const decoded = tokenService.verifyRefreshToken(cookieToken);
     const admin = await Admin.findById(decoded.adminId);
-    
-    if (!admin || !admin.isActive) return res.status(401).json({ success: false, message: 'Access revoked' });
+
+    if (!admin || !admin.isActive)
+      return res
+        .status(401)
+        .json({ success: false, message: "Access revoked" });
 
     const newAccessToken = tokenService.generateAccessToken(admin);
     return res.status(200).json({ success: true, accessToken: newAccessToken });
   } catch (error) {
-    return res.status(401).json({ success: false, message: 'Invalid session renewal key' });
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid session renewal key" });
   }
 };
 
 export const logoutAdmin = (req, res) => {
   tokenService.clearRefreshCookie(res);
-  return res.status(200).json({ success: true, message: 'Logged out successfully' });
+  return res
+    .status(200)
+    .json({ success: true, message: "Logged out successfully" });
 };
