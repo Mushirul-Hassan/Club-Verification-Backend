@@ -2,18 +2,20 @@ import express from "express";
 import {
   loginAdmin,
   refreshAdminSession,
+  getMe,
   logoutAdmin,
 } from "../controllers/adminAuthControllers.js";
 
+import { verifyAdminToken } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-// Public login node - Used on initial dashboard boot up screen
 router.post("/login", loginAdmin);
 
-// Silent auto-refresh check - Dashboard calls this if the 15m access token expires
 router.post("/refresh", refreshAdminSession);
 
-// Clears cookies upon dashboard exit
-router.post("/logout", logoutAdmin);
+router.post("/logout", verifyAdminToken, logoutAdmin);
+
+router.get("/me", verifyAdminToken, getMe);
 
 export default router;

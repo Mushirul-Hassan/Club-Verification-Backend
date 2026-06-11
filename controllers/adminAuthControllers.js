@@ -6,12 +6,10 @@ export const loginAdmin = async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Please provide username and password",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Please provide username and password",
+      });
     }
 
     const admin = await Admin.findOne({
@@ -27,7 +25,7 @@ export const loginAdmin = async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    // Use our new decoupled token engine 🚀
+    //  new decoupled token engine
     const accessToken = tokenService.generateAccessToken(admin);
     tokenService.setRefreshCookie(res, admin);
 
@@ -74,4 +72,28 @@ export const logoutAdmin = (req, res) => {
   return res
     .status(200)
     .json({ success: true, message: "Logged out successfully" });
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.admin.id);
+    if (!admin) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin not found" });
+    }
+    return res.status(200).json({
+      success: true,
+      admin: {
+        fullName: admin.fullName,
+        username: admin.username,
+        role: admin.role,
+        clubId: admin.clubId || null,
+      },
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
+  }
 };

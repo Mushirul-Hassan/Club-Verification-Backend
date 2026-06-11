@@ -1,9 +1,6 @@
 import jwt from "jsonwebtoken";
 import { tokenConfig } from "../config/tokens.config.js";
 
-/**
- * Authentication Middleware: Validates the 15-minute Access Token
- */
 export const verifyAdminToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -15,7 +12,7 @@ export const verifyAdminToken = async (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    // Uses the centralized configuration secret key 🔑
+    // Uses the centralized configuration secret key
     const decoded = jwt.verify(token, tokenConfig.access.secret);
 
     // Standardizes the admin payload so it's SaaS-ready down the line
@@ -34,9 +31,6 @@ export const verifyAdminToken = async (req, res, next) => {
   }
 };
 
-/**
- * Authorization Middleware: Blocks roles that lack clearance (e.g., Bouncers seeing Admin settings)
- */
 export const restrictTo = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.admin || !allowedRoles.includes(req.admin.role)) {
