@@ -5,5 +5,19 @@ import {
   approveSubmission,
   rejectSubmission,
 } from "../controllers/adminSubmissionController.js";
+
 import { verifyAdminToken, restrictTo } from "../middleware/authMiddleware.js";
 
+const router = express.Router();
+
+router.use(verifyAdminToken);
+
+router.get("/", restrictTo("ADMIN", "CLUB"), getSubmissions);
+
+router.get("/:id", restrictTo("ADMIN", "CLUB"), getSubmissionById);
+
+router.post("/:id/approve", restrictTo("ADMIN"), approveSubmission);
+
+router.post("/:id/reject", restrictTo("ADMIN"), rejectSubmission);
+
+export default router;
