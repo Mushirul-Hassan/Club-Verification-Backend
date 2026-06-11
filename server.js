@@ -13,6 +13,8 @@ import adminSubmissionRoutes from "./routes/adminSubmissionRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.set("trust proxy", 1);
+
 connectDB();
 
 app.use(
@@ -21,7 +23,7 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 //  Rate Limiter: Max 10 requests per minute per IP
@@ -29,10 +31,18 @@ const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 60,
   message: { error: "Too many requests, please try again in a minute." },
+  validate: { trustProxy: false },
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20, // 20 login attempts per 15 mins
+  message: { error: "Too many login attempts, try again in 15 minutes." },
+  validate: { trustProxy: false },
 });
 
 app.use("/api/user", apiLimiter, userRoutes);
-app.use("/api/admin/auth", adminAuthRoutes);
+app.use("/api/admin/auth", authLimiter, adminAuthRoutes);
 app.use("/api/admin/submissions", adminSubmissionRoutes);
 // app.use('/api/door', apiLimiter, doorRoutes);
 
