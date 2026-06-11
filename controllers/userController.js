@@ -1,6 +1,6 @@
 import UserSubmission from "../models/UserSubmission.js";
 import uploadFileToCloudinary from "../config/uploadFile.js";
-import { parseFlexibleDate } from '../utils/parseDate.js';
+import { parseFlexibleDate } from "../utils/parseDate.js";
 
 export const submitUserDetails = async (req, res) => {
   console.log("BODY:", req.body);
@@ -69,7 +69,7 @@ export const checkApprovalStatus = async (req, res) => {
       });
     }
 
-    //  If the Admin has clicked "Approve"
+    //  Approved
     if (user.status === "APPROVED") {
       return res.status(200).json({
         success: true,
@@ -88,7 +88,22 @@ export const checkApprovalStatus = async (req, res) => {
       });
     }
 
-    //  If they are still PENDING or were REJECTED
+    // BANNED
+    if (user.status === "BANNED") {
+      return res.status(403).json({
+        success: false,
+        isVerified: false,
+        status: user.status,
+        message: "You have been permanently banned from this venue.",
+        userName: user.name,
+        deviceId: user.deviceId,
+        selfieUrl: user.selfieUrl,
+        idDocumentUrl: user.idDocumentUrl,
+        submissionId: user.submissionId,
+      });
+    }
+
+    //  PENDING / REJECTED
     return res.status(200).json({
       success: true,
       isVerified: false,

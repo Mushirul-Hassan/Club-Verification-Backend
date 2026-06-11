@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import UserSubmission from "../models/UserSubmission.js";
 
 export const getSubmissions = async (req, res) => {
@@ -12,7 +13,7 @@ export const getSubmissions = async (req, res) => {
     //   filter.clubId = req.admin.clubId;
     // }
 
-    const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
+    const validStatuses = ["PENDING", "APPROVED", "REJECTED", "BANNED"];
     if (validStatuses.includes(status.toUpperCase())) {
       filter.status = status.toUpperCase();
     }
