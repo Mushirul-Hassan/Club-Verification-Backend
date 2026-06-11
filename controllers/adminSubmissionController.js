@@ -192,3 +192,58 @@ export const rejectSubmission = async (req, res) => {
     });
   }
 };
+
+export const banSubmission = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    if (!reason || reason.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Ban reason is required",
+      });
+    }
+
+    const submission = await UserSubmission.findById(id);
+
+    if (!submission) {
+      return res.status(404).json({
+        success: false,
+        message: "Submission not found",
+      });
+    }
+
+    if (submission.status === "BANNED") {
+      return res.status(400).json({
+        success: false,
+        message: "User is already banned",
+      });
+    }
+
+    submission.status = "BANNED";
+    submission.tokenId = null; // revoke QR access immediately
+    submission.rejectionReason = reason.trim();
+    submission.rejectedAt = new Date();
+    submission.rejectedBy = req.admin.id;
+
+    await submission.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User banned successfully",
+      submission: {
+        id: submission._id,
+        name: submission.name,
+        status: submission.status,
+        reason: submission.rejectionReason,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error banning user",
+      error: error.message,
+    });
+  }
+};
