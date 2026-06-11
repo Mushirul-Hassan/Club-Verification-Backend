@@ -4,6 +4,7 @@ import {
   getSubmissionById,
   approveSubmission,
   rejectSubmission,
+  banSubmission
 } from "../controllers/adminSubmissionController.js";
 
 import { verifyAdminToken, restrictTo } from "../middleware/authMiddleware.js";
@@ -19,5 +20,7 @@ router.get("/:id", restrictTo("ADMIN", "CLUB"), getSubmissionById);
 router.post("/:id/approve", restrictTo("ADMIN"), approveSubmission);
 
 router.post("/:id/reject", restrictTo("ADMIN"), rejectSubmission);
+
+router.post("/:id/ban", restrictTo("ADMIN"), banSubmission);
 
 export default router;
