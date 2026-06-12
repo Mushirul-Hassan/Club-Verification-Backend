@@ -6,7 +6,7 @@ import {
   logoutAdmin,
 } from "../controllers/adminAuthControllers.js";
 
-import { verifyAdminToken } from "../middleware/authMiddleware.js";
+import { verifyAdminToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

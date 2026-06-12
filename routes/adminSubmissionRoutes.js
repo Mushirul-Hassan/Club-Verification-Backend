@@ -7,7 +7,7 @@ import {
   banSubmission
 } from "../controllers/adminSubmissionController.js";
 
-import { verifyAdminToken, restrictTo } from "../middleware/authMiddleware.js";
+import { verifyAdminToken, restrictTo } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

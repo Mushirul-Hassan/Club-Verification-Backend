@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { tokenConfig } from "../config/tokens.config.js";
+import { tokenConfig } from "../config/token.config.js";
 
 export const verifyAdminToken = async (req, res, next) => {
   try {
