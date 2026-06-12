@@ -4,4 +4,4 @@ node_modules/
 .env.production
 .env.*
 eng.traineddata
-scripts/   
+seeder/   
