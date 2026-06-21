@@ -11,7 +11,7 @@ import adminSubmissionRoutes from "./routes/adminSubmissionRoutes.js";
 // import doorRoutes from './routes/doorRoutes.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.set("trust proxy", 1);
 
