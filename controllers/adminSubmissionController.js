@@ -106,6 +106,13 @@ export const approveSubmission = async (req, res) => {
       });
     }
 
+    if (submission.age < 18) {
+      return res.status(403).json({
+        success: false,
+        message: "Cannot approve submission — user is underage",
+      });
+    }
+
     const qrKey = `CLB-${crypto.randomBytes(6).toString("hex").toUpperCase()}`;
 
     submission.status = "APPROVED";
@@ -164,13 +171,13 @@ export const rejectSubmission = async (req, res) => {
         message: "Submission already rejected",
       });
     }
-     if (submission.status === "BANNED") {
+    if (submission.status === "BANNED") {
       return res.status(400).json({
         success: false,
         message: "Submission already banned",
       });
     }
-     if (submission.status === "APPROVED") {
+    if (submission.status === "APPROVED") {
       return res.status(400).json({
         success: false,
         message: "Submission already approved",
