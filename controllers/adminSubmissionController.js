@@ -164,6 +164,18 @@ export const rejectSubmission = async (req, res) => {
         message: "Submission already rejected",
       });
     }
+     if (submission.status === "BANNED") {
+      return res.status(400).json({
+        success: false,
+        message: "Submission already banned",
+      });
+    }
+     if (submission.status === "APPROVED") {
+      return res.status(400).json({
+        success: false,
+        message: "Submission already approved",
+      });
+    }
 
     submission.status = "REJECTED";
     submission.rejectedAt = new Date();
