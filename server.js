@@ -19,7 +19,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000", "https://clubin-eight.vercel.app/login?from=%2F"],
+    origin: ["http://localhost:5173", "http://localhost:3000", "https://clubin-eight.vercel.app"],
     credentials: true,
   }),
 );
